@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wall Ball</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="gameBoard" width="500" height="400"></canvas>
+    <script>
+	
+		// Initial variables (this is mostly trial and error to see what best fits what you're looking for)
+		// Decent amount of math involved (can all be researched)
+		
+		var canvas = document.getElementById("gameBoard");
+		var board = canvas.getContext("2d");
+		var paddleHeight = 10;
+		var paddleWidth = 75;
+		var paddleX = Math.random() * (canvas.width - paddleWidth);
+		var ballRadius = 10;
+		var ballX = Math.random() * (canvas.width - ballRadius * 2) + ballRadius;
+		var ballY = Math.random() * (canvas.height / 2) + canvas.height / 4; 
+		var dx = 2;
+		var dy = -2;
+		var rightPress = false;
+		var leftPress = false;
+		var score = 0;
+		var successes = 1;
+		var ballSpeed = 1.5;
+
+		// Event listeners to move paddle
+		
+		document.addEventListener("keydown", keyDownHandler, false);
+		document.addEventListener("keyup", keyUpHandler, false);
+
+		function keyDownHandler(e) {
+			if (e.key == "Right" || e.key == "ArrowRight") {
+				rightPress = true;
+			} else if (e.key == "Left" || e.key == "ArrowLeft") {
+				leftPress = true;
+			}
+		}
+
+		function keyUpHandler(e) {
+			if (e.key == "Right" || e.key == "ArrowRight") {
+				rightPress = false;
+			} else if (e.key == "Left" || e.key == "ArrowLeft") {
+				leftPress = false;
+			}
+		}
+
+		// Game
+		
+		function game() {
+		
+			// Blank canvas
+			
+			board.clearRect(0, 0, canvas.width, canvas.height);
+
+			// Create ball
+			
+			board.beginPath();
+			board.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+			board.fillStyle = "#FF0000";
+			board.fill();
+			board.closePath();
+
+			// Create paddle
+			
+			board.beginPath();
+			board.rect(paddleX, canvas.height - paddleHeight, paddleWidth, paddleHeight);
+			board.fillStyle = "#FF0000";
+			board.fill();
+			board.closePath();
+			
+			// Score
+			
+			board.font = "20px Calibri";
+			board.fillStyle = "#FFFFFF";
+			board.fillText("Score: " + score, 8, 20);
+
+			// Ball movement
+			
+			ballX += dx * ballSpeed;
+			ballY += dy * ballSpeed;
+
+			// Bounce off the walls
+			
+			if (ballX + dx > canvas.width - ballRadius || ballX + dx < ballRadius) {
+				dx = -dx;
+			}
+			
+			// Necessary or else the ball gets lost in space
+			
+			if (ballY + dy < ballRadius) {
+				dy = -dy;
+			}
+
+			// Bounce off the paddle
+			
+			if (ballY + dy > canvas.height - ballRadius - paddleHeight) {
+				if (ballX > paddleX && ballX < paddleX + paddleWidth) {
+					dy = -dy;
+					score += successes;
+					successes++;
+					ballSpeed += 0.1;
+				} else if (ballY + dy > canvas.height - ballRadius) {
+					// Game over and display score
+					localStorage.setItem("score", score);
+					window.location.href = "Results.html";
+				}
+			}
+
+			// Paddle movement (experiment to find good speed)
+			
+			if (rightPress && paddleX < canvas.width - paddleWidth) {
+				paddleX += 7;
+			} else if (leftPress && paddleX > 0) {
+				paddleX -= 7;
+			}
+
+			requestAnimationFrame(game);
+		}
+
+		game();
+	</script>
+</body>
+</html>

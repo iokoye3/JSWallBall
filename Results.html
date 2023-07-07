@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Game Results</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<div id="gameover">
+		<h1>GAME OVER</h1>
+		<br>
+		<p>Final Score</p>
+		<p id="results"></p>
+		<br>
+		<input type="button" id="restart" value="RESTART GAME" onClick="restart()" />
+		
+		<script>
+			function restart() {
+				window.location.href = "WallBall.html";
+			}
+			
+			document.addEventListener("DOMContentLoaded", function() {
+				var score = localStorage.getItem("score");
+				document.getElementById("results").textContent = score;
+			});
+		</script>
+	</div
+</body>
+</html>
