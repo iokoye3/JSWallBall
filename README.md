@@ -1,1 +1,1 @@
-# JSWallBall
+Created a wall ball game using HTML, JavaScript, and CSS. The game progressively speeds up as you continue to succeed to increase difficulty. Do not remember what this game is actually called but remember loving the concept. Also need to work out a glitch that causes the ball to slide across the paddle instead of bounce.
